@@ -9,7 +9,7 @@ import java.io.IOException;
 public class StateAnalyserTest {
     private static final String INDIA_CENSUS_CSV_FILE_PATH = "src\\test\\resources\\IndianStateCensusData.csv";
     private static final String WRONG_CSV_FILE_PATH = "src\\main\\resources\\IndianStateCensusData.csv";
-
+    private static final String INDIAN_CENSUS_CSV_WRONG_DELIMITER = "src\\main\\resources\\IndiaStateCensusDataWrongDelimiter.csv";
 
     @Test
     public void givenIndianCensusCSVFileReturnsCorrectRecords() {
@@ -54,6 +54,19 @@ public class StateAnalyserTest {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
 
+    @Test
+    public void givenEmptyCsvFile_ShouldReturnCustomExceptionType() {
+        try {
+            StateCensusAnalyser censusAnalyser = new StateCensusAnalyser();
+            int numOfRecords = censusAnalyser.loadIndiaCensusData(INDIAN_CENSUS_CSV_WRONG_DELIMITER);
+        } catch (CensusAnalyserException e) {
+            Assertions.assertEquals(CensusAnalyserException.ExceptionType.CENSUS_FILE_PROBLEM, e.type);
+        } catch (CSVBuilderException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
