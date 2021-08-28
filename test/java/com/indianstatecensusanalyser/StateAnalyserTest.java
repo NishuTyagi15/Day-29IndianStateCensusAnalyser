@@ -45,8 +45,8 @@ public class StateAnalyserTest {
     public void givenIndianStateCSV_shouldReturnExactCount() {
         try {
             StateCensusAnalyser censusAnalyser = new StateCensusAnalyser();
-            int numOfStateCode = censusAnalyser.loadIndiaCensusData(INDIA_CENSUS_CSV_FILE_PATH);
-            Assertions.assertEquals(29, numOfStateCode);
+            int numOfStateCensus = censusAnalyser.loadIndiaCensusData(INDIA_CENSUS_CSV_FILE_PATH);
+            Assertions.assertEquals(29, numOfStateCensus);
         } catch (CensusAnalyserException e) {
             Assertions.assertEquals(CensusAnalyserException.ExceptionType.CENSUS_FILE_PROBLEM, e.type);
         } catch (CSVBuilderException e) {
@@ -60,7 +60,7 @@ public class StateAnalyserTest {
     public void givenEmptyCsvFile_ShouldReturnCustomExceptionType() {
         try {
             StateCensusAnalyser censusAnalyser = new StateCensusAnalyser();
-            int numOfRecords = censusAnalyser.loadIndiaCensusData(INDIAN_CENSUS_CSV_WRONG_DELIMITER);
+            censusAnalyser.loadIndiaCensusData(INDIAN_CENSUS_CSV_WRONG_DELIMITER);
         } catch (CensusAnalyserException e) {
             Assertions.assertEquals(CensusAnalyserException.ExceptionType.CENSUS_FILE_PROBLEM, e.type);
         } catch (CSVBuilderException e) {
