@@ -7,7 +7,6 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.stream.StreamSupport;
 
 public class StateCensusAnalyser {
     List<IndiaCensusDAO> csvFileList;
@@ -16,18 +15,25 @@ public class StateCensusAnalyser {
     }
 
     public int loadIndiaCensusData(String csvFilePath) throws CensusAnalyserException, IOException, CSVBuilderException {
-        Reader reader = Files.newBufferedReader(Paths.get(csvFilePath));
-        ICSVBuilder csvBuilder = CSVBuilderFactory.createCSVBuilder();
-        Iterator<IndiaCensusCSV> csvIterator = csvBuilder.getCSVFileIterator(reader, IndiaCensusCSV.class);
-        while (csvIterator.hasNext()) {
-            this.csvFileList.add(new IndiaCensusDAO(csvIterator.next()));
+        try (Reader reader = Files.newBufferedReader(Paths.get(csvFilePath))) {
+            ICSVBuilder csvBuilder = CSVBuilderFactory.createCSVBuilder();
+            Iterator<IndiaCensusCSV> csvIterator = csvBuilder.getCSVFileIterator(reader, IndiaCensusCSV.class);
+            while (csvIterator.hasNext()) {
+                this.csvFileList.add(new IndiaCensusDAO(csvIterator.next()));
+            }
+            return csvFileList.size();
+        } catch (IOException e) {
+            throw new CensusAnalyserException(e.getMessage(),
+                    CensusAnalyserException.ExceptionType.CENSUS_FILE_PROBLEM);
+        } catch (CSVBuilderException e) {
+            throw new CensusAnalyserException(e.getMessage(), e.type.name());
+        }  catch (NullPointerException e) {
+            throw new CensusAnalyserException(e.getMessage(),
+                    CensusAnalyserException.ExceptionType.NO_CENSUS_DATA);
         }
-        return csvFileList.size();
-    }
-
-    private <E> int getCount(Iterator<E> iterator) {
-        Iterable<E> iterable = () -> iterator;
-        int numOfEntries = (int) StreamSupport.stream(iterable.spliterator(), false).count();
-        return numOfEntries;
+        catch (RuntimeException e) {
+            throw new CensusAnalyserException(e.getMessage(),
+                    CensusAnalyserException.ExceptionType.CSV_FILE_INTERNAL_ISSUES);
+        }
     }
 }
