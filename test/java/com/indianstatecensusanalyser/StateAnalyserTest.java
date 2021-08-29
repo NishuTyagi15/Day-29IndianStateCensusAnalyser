@@ -78,7 +78,7 @@ public class StateAnalyserTest {
     public void givenWrongDelimiter_InIndiaCensusData_ShouldReturnCustomExceptionType() {
         try {
             StateCensusAnalyser censusAnalyser = new StateCensusAnalyser();
-            int numOfRecords = censusAnalyser.loadIndiaCensusData(INDIAN_CENSUS_CSV_WRONG_DELIMITER);
+            censusAnalyser.loadIndiaCensusData(INDIAN_CENSUS_CSV_WRONG_DELIMITER);
         } catch (CensusAnalyserException e) {
             Assertions.assertEquals(CensusAnalyserException.ExceptionType.CENSUS_FILE_PROBLEM, e.type);
         } catch (CSVBuilderException e) {
@@ -150,7 +150,7 @@ public class StateAnalyserTest {
     public void givenWrongDelimiter_InIndiaStateCodeData_ShouldReturnCustomException() {
         try {
             StateCensusAnalyser censusAnalyser = new StateCensusAnalyser();
-            int numOfRecords = censusAnalyser.loadIndiaCensusData(STATE_CODE_CSV_WRONG_DELIMITER);
+            censusAnalyser.loadIndiaCensusData(STATE_CODE_CSV_WRONG_DELIMITER);
         } catch (CensusAnalyserException e) {
             Assertions.assertEquals(CensusAnalyserException.ExceptionType.CENSUS_FILE_PROBLEM, e.type);
         } catch (CSVBuilderException e) {
